@@ -172,11 +172,3 @@ export interface ManagedUser {
   CurrentRowVer: string;
 }
 
-// ── Confirm dialog ────────────────────────────────────────────
-export interface ConfirmDialogData {
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  danger?: boolean;
-}

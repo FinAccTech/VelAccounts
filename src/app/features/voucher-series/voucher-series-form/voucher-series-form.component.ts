@@ -1,23 +1,24 @@
-
-import { Component, inject, OnInit, signal } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { ReactiveFormsModule, FormBuilder, Validators } from "@angular/forms";
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatSelectModule } from "@angular/material/select";
-import { MatButtonModule } from "@angular/material/button";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { VoucherSeriesService, VoucherTypesService } from "../../../core/services/api.services";
-import { VoucherSeries, VoucherType } from "../../../core/models";
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { VoucherSeriesService, VoucherTypesService } from '../../../core/services/api.services';
+import { VoucherSeries, VoucherType, NumberingMethod } from '../../../core/models';
 
 @Component({
-  selector: "app-voucher-series-form",
+  selector: 'app-voucher-series-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule,
-            MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule],
+  imports: [
+    CommonModule, ReactiveFormsModule, MatDialogModule,
+    MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule,
+  ],
   template: `
-    <h2 mat-dialog-title>{{ row ? "Edit" : "New" }} Voucher Series</h2>
+    <h2 mat-dialog-title>{{ row ? 'Edit' : 'New' }} Voucher Series</h2>
     <mat-dialog-content>
       <form [formGroup]="form" class="dialog-form">
         <mat-form-field appearance="outline">
@@ -43,13 +44,13 @@ import { VoucherSeries, VoucherType } from "../../../core/models";
           <mat-form-field appearance="outline">
             <mat-label>Width (digits)</mat-label>
             <input matInput type="number" formControlName="Width" min="1" max="10" />
-            <mat-error>Required (1-10)</mat-error>
+            <mat-error>Required (1–10)</mat-error>
           </mat-form-field>
         </div>
         <mat-form-field appearance="outline">
           <mat-label>Numbering Method</mat-label>
           <mat-select formControlName="Numbering_Method">
-            <mat-option value="AUTO">AUTO — System generates number automatically</mat-option>
+            <mat-option value="AUTO">AUTO — System generates automatically</mat-option>
             <mat-option value="SEMI">SEMI — System suggests; user can edit</mat-option>
             <mat-option value="MANUAL">MANUAL — User always types the number</mat-option>
           </mat-select>
@@ -65,30 +66,32 @@ import { VoucherSeries, VoucherType } from "../../../core/models";
     <mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
       <button mat-flat-button color="primary" (click)="save()" [disabled]="saving">
-        {{ saving ? "Saving…" : "Save" }}
+        {{ saving ? 'Saving…' : 'Save' }}
       </button>
     </mat-dialog-actions>
   `,
-  styles: [`.dialog-form { display:flex; flex-direction:column; gap:4px; padding-top:8px; min-width:400px; }
-            .row-2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }`],
+  styles: [`
+    .dialog-form { display:flex; flex-direction:column; gap:4px; padding-top:8px; min-width:400px; }
+    .row-2       { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  `],
 })
 export class VoucherSeriesFormComponent implements OnInit {
-  private svc      = inject(VoucherSeriesService);
-  private typeSvc  = inject(VoucherTypesService);
-  private fb       = inject(FormBuilder);
-  private snack    = inject(MatSnackBar);
-  private ref      = inject(MatDialogRef<VoucherSeriesFormComponent>);
-  readonly row     = inject<VoucherSeries | undefined>(MAT_DIALOG_DATA);
+  private svc     = inject(VoucherSeriesService);
+  private typeSvc = inject(VoucherTypesService);
+  private fb      = inject(FormBuilder);
+  private snack   = inject(MatSnackBar);
+  private ref     = inject(MatDialogRef<VoucherSeriesFormComponent>);
+  readonly row    = inject<VoucherSeries | undefined>(MAT_DIALOG_DATA);
 
   saving = false;
   types  = signal<VoucherType[]>([]);
 
-  form = this.fb.nonNullable.group({
-    Series_Name:      ["", Validators.required],
-    VouTypeSno:       [0,  Validators.required],
-    Prefix:           ["", Validators.required],
-    Width:            [5,  [Validators.required, Validators.min(1), Validators.max(10)]],
-    Numbering_Method: ["AUTO", Validators.required],
+  form = this.fb.group({
+    Series_Name:      ['', Validators.required],
+    VouTypeSno:       [0 as number, Validators.required],
+    Prefix:           ['', Validators.required],
+    Width:            [5, [Validators.required, Validators.min(1), Validators.max(10)]],
+    Numbering_Method: ['AUTO' as NumberingMethod, Validators.required],
     Current_No:       [0],
   });
 
@@ -100,12 +103,20 @@ export class VoucherSeriesFormComponent implements OnInit {
   save() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving = true;
-    const v   = this.form.getRawValue();
+    const v = this.form.getRawValue();
+    const body = {
+      Series_Name:      v.Series_Name!,
+      VouTypeSno:       v.VouTypeSno!,
+      Prefix:           v.Prefix!,
+      Width:            v.Width!,
+      Numbering_Method: v.Numbering_Method as NumberingMethod,
+      Current_No:       v.Current_No ?? 0,
+    };
     const obs = this.row
-      ? this.svc.update(this.row.SeriesSno, { ...v, CurrentRowVer: this.row.CurrentRowVer })
-      : this.svc.create(v);
+      ? this.svc.update(this.row.SeriesSno, { ...body, CurrentRowVer: this.row.CurrentRowVer })
+      : this.svc.create(body);
     obs.subscribe({
-      next: () => { this.snack.open("Saved.", "OK"); this.ref.close(true); },
+      next:  () => { this.snack.open('Saved.', 'OK'); this.ref.close(true); },
       error: () => { this.saving = false; },
     });
   }

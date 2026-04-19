@@ -1,1 +1,35 @@
-/* You can add global styles to this file, and also import other style files */
+/* ── Google Material Icons font ──────────────────────────── */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/* ── Base ────────────────────────────────────────────────── */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+/* Force Material Icons to render correctly */
+.material-icons, mat-icon {
+  font-family: 'Material Icons' !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Snackbar colours ────────────────────────────────────── */
+.snack-error .mdc-snackbar__surface  { background: #c62828 !important; }
+.snack-error .mdc-snackbar__label    { color: white !important; }
+
+/* ── Material table cells ────────────────────────────────── */
+.mat-mdc-cell, .mat-mdc-header-cell { padding: 8px 12px !important; }

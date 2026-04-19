@@ -109,7 +109,11 @@ import { ConfirmDialogComponent } from "../../../shared/components/confirm-dialo
     </mat-card>
   `,
   styles: [`
-    @import "../../../shared/list.styles.css";
+    .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .page-title  { margin:0; font-size:22px; }
+    .full-table  { width:100%; }
+    .empty-state { display:flex; flex-direction:column; align-items:center; padding:48px; color:#aaa; }
+    .empty-state mat-icon { font-size:48px; width:48px; height:48px; }
     .filter-card { margin-bottom:16px; padding:8px 16px; }
     .filter-row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
     .filter-field { min-width:160px; }

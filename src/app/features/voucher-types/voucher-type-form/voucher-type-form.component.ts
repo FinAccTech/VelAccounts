@@ -1,23 +1,24 @@
-
-import { Component, inject, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { ReactiveFormsModule, FormBuilder, Validators } from "@angular/forms";
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatSelectModule } from "@angular/material/select";
-import { MatButtonModule } from "@angular/material/button";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { VoucherTypesService } from "../../../core/services/api.services";
-import { VoucherType } from "../../../core/models";
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { VoucherTypesService } from '../../../core/services/api.services';
+import { VoucherType, CashType } from '../../../core/models';
 
 @Component({
-  selector: "app-voucher-type-form",
+  selector: 'app-voucher-type-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule,
-            MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule],
+  imports: [
+    CommonModule, ReactiveFormsModule, MatDialogModule,
+    MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule,
+  ],
   template: `
-    <h2 mat-dialog-title>{{ row ? "Edit" : "New" }} Voucher Type</h2>
+    <h2 mat-dialog-title>{{ row ? 'Edit' : 'New' }} Voucher Type</h2>
     <mat-dialog-content>
       <form [formGroup]="form" class="dialog-form">
         <mat-form-field appearance="outline">
@@ -43,11 +44,11 @@ import { VoucherType } from "../../../core/models";
     <mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Cancel</button>
       <button mat-flat-button color="primary" (click)="save()" [disabled]="saving">
-        {{ saving ? "Saving…" : "Save" }}
+        {{ saving ? 'Saving…' : 'Save' }}
       </button>
     </mat-dialog-actions>
   `,
-  styles: [".dialog-form { display:flex; flex-direction:column; gap:4px; padding-top:8px; min-width:340px; }"],
+  styles: [`.dialog-form { display:flex; flex-direction:column; gap:4px; padding-top:8px; min-width:340px; }`],
 })
 export class VoucherTypeFormComponent implements OnInit {
   private svc   = inject(VoucherTypesService);
@@ -57,10 +58,11 @@ export class VoucherTypeFormComponent implements OnInit {
   readonly row  = inject<VoucherType | undefined>(MAT_DIALOG_DATA);
 
   saving = false;
-  form   = this.fb.nonNullable.group({
-    VTyp_Code:  ["", Validators.required],
-    VTyp_Name:  ["", Validators.required],
-    Cash_Type:  ["OUT", Validators.required],
+
+  form = this.fb.group({
+    VTyp_Code:  ['', Validators.required],
+    VTyp_Name:  ['', Validators.required],
+    Cash_Type:  ['OUT' as CashType, Validators.required],
   });
 
   ngOnInit() { if (this.row) this.form.patchValue(this.row); }
@@ -68,12 +70,17 @@ export class VoucherTypeFormComponent implements OnInit {
   save() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving = true;
-    const v   = this.form.getRawValue();
+    const v = this.form.getRawValue();
+    const body = {
+      VTyp_Code: v.VTyp_Code!,
+      VTyp_Name: v.VTyp_Name!,
+      Cash_Type: v.Cash_Type as CashType,
+    };
     const obs = this.row
-      ? this.svc.update(this.row.VouTypeSno, { ...v, CurrentRowVer: this.row.CurrentRowVer })
-      : this.svc.create(v);
+      ? this.svc.update(this.row.VouTypeSno, { ...body, CurrentRowVer: this.row.CurrentRowVer })
+      : this.svc.create(body);
     obs.subscribe({
-      next: () => { this.snack.open("Saved.", "OK"); this.ref.close(true); },
+      next:  () => { this.snack.open('Saved.', 'OK'); this.ref.close(true); },
       error: () => { this.saving = false; },
     });
   }
