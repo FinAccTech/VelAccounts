@@ -1,0 +1,58 @@
+<mat-toolbar color="primary">
+  <span>VelAccounts</span>
+  <span class="spacer"></span>
+  <span class="user-info">{{ user()?.User_Name }}</span>
+  <button mat-icon-button (click)="logout()" title="Logout">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="select-page">
+  <mat-card class="select-card">
+    <mat-card-header>
+      <mat-card-title>Select Book of Accounts</mat-card-title>
+      <mat-card-subtitle>Choose the book you want to work in</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (loading()) {
+        <div class="center"><mat-spinner diameter="48" /></div>
+      } @else if (accounts().length === 0) {
+        <div class="empty">
+          <mat-icon>book_open</mat-icon>
+          <p>No books of accounts found. Contact your administrator.</p>
+        </div>
+      } @else {
+        <mat-selection-list [multiple]="false">
+          @for (acc of accounts(); track acc.AccSno) {
+            <mat-list-item (click)="select(acc)" class="account-item">
+              <mat-icon matListItemIcon>menu_book</mat-icon>
+              <span matListItemTitle>{{ acc.Acc_Name }}</span>
+              <span matListItemLine>{{ acc.Acc_Code }}</span>
+              @if (acc.Remarks) {
+                <span matListItemLine class="remarks">{{ acc.Remarks }}</span>
+              }
+              <mat-icon matListItemMeta>chevron_right</mat-icon>
+            </mat-list-item>
+          }
+        </mat-selection-list>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<style>
+.spacer { flex: 1; }
+.user-info { margin-right: 8px; font-size: 14px; }
+.select-page {
+  display: flex; justify-content: center;
+  padding: 48px 16px; background: #f5f5f5; min-height: calc(100vh - 64px);
+}
+.select-card { width: 100%; max-width: 520px; }
+.account-item { cursor: pointer; border-radius: 8px; margin: 4px 0; }
+.account-item:hover { background: rgba(0,0,0,.04); }
+.center { display: flex; justify-content: center; padding: 32px; }
+.empty { text-align: center; padding: 48px; color: #888; }
+.empty mat-icon { font-size: 48px; height: 48px; width: 48px; }
+.remarks { font-size: 11px; color: #aaa; }
+</style>
