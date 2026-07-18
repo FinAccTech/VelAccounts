@@ -35,13 +35,15 @@ export class ShellComponent {
   readonly sidenavOpen   = signal(true);
 
   readonly navItems: NavItem[] = [
-    { label: 'Dashboard',      icon: 'dashboard',    route: '/app/dashboard' },
-    { label: 'Ledger Groups',  icon: 'folder',       route: '/app/ledger-groups' },
-    { label: 'Ledgers',        icon: 'account_tree', route: '/app/ledgers' },
-    { label: 'Voucher Types',  icon: 'category',     route: '/app/voucher-types', adminOnly: true },
-    { label: 'Voucher Series', icon: 'format_list_numbered', route: '/app/voucher-series', adminOnly: true },
-    { label: 'Vouchers',       icon: 'receipt_long', route: '/app/vouchers' },
-    { label: 'Ledger Statement', icon: 'bar_chart',  route: '/app/ledger-statement' },
+    { label: 'Dashboard',        icon: 'dashboard',            route: '/app/dashboard'        },
+    { label: 'Ledger Groups',    icon: 'folder',               route: '/app/ledger-groups'    },
+    { label: 'Ledgers',          icon: 'account_tree',         route: '/app/ledgers'          },
+    { label: 'Voucher Types',    icon: 'category',             route: '/app/voucher-types',   adminOnly: true },
+    { label: 'Voucher Series',   icon: 'format_list_numbered', route: '/app/voucher-series',  adminOnly: true },
+    { label: 'Vouchers',         icon: 'receipt_long',         route: '/app/vouchers'         },
+    { label: 'Ledger Statement', icon: 'bar_chart',            route: '/app/ledger-statement' },
+    { label: 'Profit & Loss',    icon: 'trending_up',          route: '/app/profit-loss'      },
+    { label: 'Balance Sheet',    icon: 'account_balance',      route: '/app/balance-sheet'    },
   ];
 
   readonly adminItems: NavItem[] = [
@@ -53,7 +55,5 @@ export class ShellComponent {
     this.router.navigate(['/select-account']);
   }
 
-  logout(): void {
-    this.auth.logout();
-  }
+  logout(): void { this.auth.logout(); }
 }

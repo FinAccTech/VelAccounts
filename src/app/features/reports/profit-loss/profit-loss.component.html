@@ -1,0 +1,159 @@
+<div class="page-header no-print">
+  <h2 class="page-title">Profit & Loss Statement</h2>
+  <button mat-stroked-button (click)="print()">
+    <mat-icon>print</mat-icon> Print
+  </button>
+</div>
+
+<!-- Date filter -->
+<mat-card class="filter-card no-print">
+  <form [formGroup]="form" class="filter-row">
+    <mat-form-field appearance="outline">
+      <mat-label>From Date</mat-label>
+      <input matInput [matDatepicker]="dpFrom" formControlName="fromDate" />
+      <mat-datepicker-toggle matSuffix [for]="dpFrom" />
+      <mat-datepicker #dpFrom />
+      <mat-error>Required</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>To Date</mat-label>
+      <input matInput [matDatepicker]="dpTo" formControlName="toDate" />
+      <mat-datepicker-toggle matSuffix [for]="dpTo" />
+      <mat-datepicker #dpTo />
+      <mat-error>Required</mat-error>
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="load()" [disabled]="loading()">
+      <mat-icon>search</mat-icon> Generate
+    </button>
+  </form>
+</mat-card>
+
+@if (loading()) { <mat-progress-bar mode="indeterminate" class="no-print" /> }
+
+@if (report()) {
+  <!-- Print header -->
+  <div class="print-header print-only">
+    <h2>Profit & Loss Statement</h2>
+    <p>
+      From {{ report()!.summary.FromDate | date:'dd MMM yyyy' }}
+      To   {{ report()!.summary.ToDate   | date:'dd MMM yyyy' }}
+    </p>
+  </div>
+
+  <div class="report-grid">
+
+    <!-- ── INCOME SIDE ─────────────────────────────────────── -->
+    <mat-card class="report-card income-card">
+      <div class="card-title income-title">
+        <mat-icon>trending_up</mat-icon> Income
+      </div>
+      <mat-divider />
+
+      @if (incomeGroups().length === 0) {
+        <p class="empty-msg">No income transactions.</p>
+      }
+
+      @for (grp of incomeGroups(); track grp.grpName) {
+        <div class="group-header">{{ grp.grpName }}</div>
+        @for (line of grp.lines; track line.LedSno) {
+          <div class="report-line">
+            <span class="led-name">{{ line.Led_Name }}</span>
+            <span class="amount income-amount">{{ line.Amount | number:'1.2-2' }}</span>
+          </div>
+        }
+        <div class="group-total">
+          <span>Subtotal — {{ grp.grpName }}</span>
+          <span class="income-amount">{{ grp.total | number:'1.2-2' }}</span>
+        </div>
+        <mat-divider />
+      }
+
+      <div class="grand-total">
+        <span>Total Income</span>
+        <span class="income-amount">{{ report()!.summary.TotalIncome | number:'1.2-2' }}</span>
+      </div>
+
+      <!-- Net Loss shown on income side if loss -->
+      @if (report()!.summary.NetProfit < 0) {
+        <div class="net-line loss">
+          <span>Net Loss (transferred to Capital)</span>
+          <span>{{ (report()!.summary.NetProfit * -1) | number:'1.2-2' }}</span>
+        </div>
+        <mat-divider />
+        <div class="grand-total">
+          <span>Grand Total</span>
+          <span>{{ report()!.summary.TotalExpense | number:'1.2-2' }}</span>
+        </div>
+      }
+    </mat-card>
+
+    <!-- ── EXPENSE SIDE ────────────────────────────────────── -->
+    <mat-card class="report-card expense-card">
+      <div class="card-title expense-title">
+        <mat-icon>trending_down</mat-icon> Expenses
+      </div>
+      <mat-divider />
+
+      @if (expenseGroups().length === 0) {
+        <p class="empty-msg">No expense transactions.</p>
+      }
+
+      @for (grp of expenseGroups(); track grp.grpName) {
+        <div class="group-header">{{ grp.grpName }}</div>
+        @for (line of grp.lines; track line.LedSno) {
+          <div class="report-line">
+            <span class="led-name">{{ line.Led_Name }}</span>
+            <span class="amount expense-amount">{{ line.Amount | number:'1.2-2' }}</span>
+          </div>
+        }
+        <div class="group-total">
+          <span>Subtotal — {{ grp.grpName }}</span>
+          <span class="expense-amount">{{ grp.total | number:'1.2-2' }}</span>
+        </div>
+        <mat-divider />
+      }
+
+      <div class="grand-total">
+        <span>Total Expenses</span>
+        <span class="expense-amount">{{ report()!.summary.TotalExpense | number:'1.2-2' }}</span>
+      </div>
+
+      <!-- Net Profit shown on expense side if profit -->
+      @if (report()!.summary.NetProfit >= 0) {
+        <div class="net-line profit">
+          <span>Net Profit (transferred to Capital)</span>
+          <span>{{ report()!.summary.NetProfit | number:'1.2-2' }}</span>
+        </div>
+        <mat-divider />
+        <div class="grand-total">
+          <span>Grand Total</span>
+          <span>{{ report()!.summary.TotalIncome | number:'1.2-2' }}</span>
+        </div>
+      }
+    </mat-card>
+  </div>
+
+  <!-- Summary banner -->
+  <mat-card class="summary-banner no-print">
+    <div class="summary-item">
+      <span class="sum-label">Total Income</span>
+      <span class="sum-value income-amount">{{ report()!.summary.TotalIncome | number:'1.2-2' }}</span>
+    </div>
+    <div class="summary-item">
+      <span class="sum-label">Total Expenses</span>
+      <span class="sum-value expense-amount">{{ report()!.summary.TotalExpense | number:'1.2-2' }}</span>
+    </div>
+    <div class="summary-item highlight" [class.profit]="report()!.summary.NetProfit >= 0"
+                                        [class.loss]="report()!.summary.NetProfit < 0">
+      <span class="sum-label">{{ report()!.summary.NetProfit >= 0 ? 'Net Profit' : 'Net Loss' }}</span>
+      <span class="sum-value">{{ (report()!.summary.NetProfit | number:'1.2-2') }}</span>
+    </div>
+  </mat-card>
+}
+
+@if (!report() && !loading()) {
+  <div class="empty-state">
+    <mat-icon>analytics</mat-icon>
+    <p>Select a date range and click Generate to view the Profit & Loss Statement.</p>
+  </div>
+}

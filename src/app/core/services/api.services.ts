@@ -14,22 +14,11 @@ const BASE = environment.apiUrl;
 export class AccountsService {
   private http = inject(HttpClient);
   private url  = `${BASE}/accounts`;
-
-  list(): Observable<ApiResponse<Account[]>> {
-    return this.http.get<ApiResponse<Account[]>>(this.url);
-  }
-  get(id: number): Observable<ApiResponse<Account>> {
-    return this.http.get<ApiResponse<Account>>(`${this.url}/${id}`);
-  }
-  create(body: Partial<Account>): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(this.url, body);
-  }
-  update(id: number, body: Partial<Account> & { CurrentRowVer: string }): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(`${this.url}/${id}`, body);
-  }
-  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> {
-    return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } });
-  }
+  list(): Observable<ApiResponse<Account[]>> { return this.http.get<ApiResponse<Account[]>>(this.url); }
+  get(id: number): Observable<ApiResponse<Account>> { return this.http.get<ApiResponse<Account>>(`${this.url}/${id}`); }
+  create(body: Partial<Account>): Observable<ApiResponse> { return this.http.post<ApiResponse>(this.url, body); }
+  update(id: number, body: Partial<Account> & { CurrentRowVer: string }): Observable<ApiResponse> { return this.http.put<ApiResponse>(`${this.url}/${id}`, body); }
+  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> { return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } }); }
 }
 
 // ── Ledger Groups ─────────────────────────────────────────────
@@ -37,22 +26,11 @@ export class AccountsService {
 export class LedgerGroupsService {
   private http = inject(HttpClient);
   private url  = `${BASE}/ledger-groups`;
-
-  list(): Observable<ApiResponse<LedgerGroup[]>> {
-    return this.http.get<ApiResponse<LedgerGroup[]>>(this.url);
-  }
-  get(id: number): Observable<ApiResponse<LedgerGroup>> {
-    return this.http.get<ApiResponse<LedgerGroup>>(`${this.url}/${id}`);
-  }
-  create(body: Partial<LedgerGroup>): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(this.url, body);
-  }
-  update(id: number, body: Partial<LedgerGroup> & { CurrentRowVer: string }): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(`${this.url}/${id}`, body);
-  }
-  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> {
-    return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } });
-  }
+  list(): Observable<ApiResponse<LedgerGroup[]>> { return this.http.get<ApiResponse<LedgerGroup[]>>(this.url); }
+  get(id: number): Observable<ApiResponse<LedgerGroup>> { return this.http.get<ApiResponse<LedgerGroup>>(`${this.url}/${id}`); }
+  create(body: Partial<LedgerGroup>): Observable<ApiResponse> { return this.http.post<ApiResponse>(this.url, body); }
+  update(id: number, body: Partial<LedgerGroup> & { CurrentRowVer: string }): Observable<ApiResponse> { return this.http.put<ApiResponse>(`${this.url}/${id}`, body); }
+  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> { return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } }); }
 }
 
 // ── Ledgers ───────────────────────────────────────────────────
@@ -60,24 +38,15 @@ export class LedgerGroupsService {
 export class LedgersService {
   private http = inject(HttpClient);
   private url  = `${BASE}/ledgers`;
-
   list(grpSno?: number): Observable<ApiResponse<Ledger[]>> {
     let params = new HttpParams();
     if (grpSno) params = params.set('grpSno', grpSno);
     return this.http.get<ApiResponse<Ledger[]>>(this.url, { params });
   }
-  get(id: number): Observable<ApiResponse<Ledger>> {
-    return this.http.get<ApiResponse<Ledger>>(`${this.url}/${id}`);
-  }
-  create(body: Partial<Ledger>): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(this.url, body);
-  }
-  update(id: number, body: Partial<Ledger> & { CurrentRowVer: string }): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(`${this.url}/${id}`, body);
-  }
-  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> {
-    return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } });
-  }
+  get(id: number): Observable<ApiResponse<Ledger>> { return this.http.get<ApiResponse<Ledger>>(`${this.url}/${id}`); }
+  create(body: Partial<Ledger>): Observable<ApiResponse> { return this.http.post<ApiResponse>(this.url, body); }
+  update(id: number, body: Partial<Ledger> & { CurrentRowVer: string }): Observable<ApiResponse> { return this.http.put<ApiResponse>(`${this.url}/${id}`, body); }
+  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> { return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } }); }
 }
 
 // ── Voucher Types ─────────────────────────────────────────────
@@ -85,22 +54,11 @@ export class LedgersService {
 export class VoucherTypesService {
   private http = inject(HttpClient);
   private url  = `${BASE}/voucher-types`;
-
-  list(): Observable<ApiResponse<VoucherType[]>> {
-    return this.http.get<ApiResponse<VoucherType[]>>(this.url);
-  }
-  get(id: number): Observable<ApiResponse<VoucherType>> {
-    return this.http.get<ApiResponse<VoucherType>>(`${this.url}/${id}`);
-  }
-  create(body: Partial<VoucherType>): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(this.url, body);
-  }
-  update(id: number, body: Partial<VoucherType> & { CurrentRowVer: string }): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(`${this.url}/${id}`, body);
-  }
-  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> {
-    return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } });
-  }
+  list(): Observable<ApiResponse<VoucherType[]>> { return this.http.get<ApiResponse<VoucherType[]>>(this.url); }
+  get(id: number): Observable<ApiResponse<VoucherType>> { return this.http.get<ApiResponse<VoucherType>>(`${this.url}/${id}`); }
+  create(body: Partial<VoucherType>): Observable<ApiResponse> { return this.http.post<ApiResponse>(this.url, body); }
+  update(id: number, body: Partial<VoucherType> & { CurrentRowVer: string }): Observable<ApiResponse> { return this.http.put<ApiResponse>(`${this.url}/${id}`, body); }
+  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> { return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } }); }
 }
 
 // ── Voucher Series ────────────────────────────────────────────
@@ -108,27 +66,12 @@ export class VoucherTypesService {
 export class VoucherSeriesService {
   private http = inject(HttpClient);
   private url  = `${BASE}/voucher-series`;
-
-  list(): Observable<ApiResponse<VoucherSeries[]>> {
-    return this.http.get<ApiResponse<VoucherSeries[]>>(this.url);
-  }
-  get(id: number): Observable<ApiResponse<VoucherSeries>> {
-    return this.http.get<ApiResponse<VoucherSeries>>(`${this.url}/${id}`);
-  }
-  create(body: Partial<VoucherSeries>): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(this.url, body);
-  }
-  update(id: number, body: Partial<VoucherSeries> & { CurrentRowVer: string }): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(`${this.url}/${id}`, body);
-  }
-  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> {
-    return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } });
-  }
-  getNextNumber(seriesSno: number): Observable<ApiResponse<NextVoucherNo>> {
-    return this.http.get<ApiResponse<NextVoucherNo>>(
-      `${BASE}/vouchers/next-number/${seriesSno}`
-    );
-  }
+  list(): Observable<ApiResponse<VoucherSeries[]>> { return this.http.get<ApiResponse<VoucherSeries[]>>(this.url); }
+  get(id: number): Observable<ApiResponse<VoucherSeries>> { return this.http.get<ApiResponse<VoucherSeries>>(`${this.url}/${id}`); }
+  create(body: Partial<VoucherSeries>): Observable<ApiResponse> { return this.http.post<ApiResponse>(this.url, body); }
+  update(id: number, body: Partial<VoucherSeries> & { CurrentRowVer: string }): Observable<ApiResponse> { return this.http.put<ApiResponse>(`${this.url}/${id}`, body); }
+  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> { return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } }); }
+  getNextNumber(seriesSno: number): Observable<ApiResponse<NextVoucherNo>> { return this.http.get<ApiResponse<NextVoucherNo>>(`${BASE}/vouchers/next-number/${seriesSno}`); }
 }
 
 // ── Vouchers ──────────────────────────────────────────────────
@@ -137,8 +80,7 @@ export class VouchersService {
   private http = inject(HttpClient);
   private url  = `${BASE}/vouchers`;
 
-  list(filters?: { seriesSno?: number; ledSno?: number; fromDate?: string; toDate?: string }):
-    Observable<ApiResponse<Voucher[]>> {
+  list(filters?: { seriesSno?: number; ledSno?: number; fromDate?: string; toDate?: string }): Observable<ApiResponse<Voucher[]>> {
     let params = new HttpParams();
     if (filters?.seriesSno) params = params.set('seriesSno', filters.seriesSno);
     if (filters?.ledSno)    params = params.set('ledSno',    filters.ledSno);
@@ -146,38 +88,84 @@ export class VouchersService {
     if (filters?.toDate)    params = params.set('toDate',    filters.toDate);
     return this.http.get<ApiResponse<Voucher[]>>(this.url, { params });
   }
+  get(id: number): Observable<ApiResponse<Voucher>> { return this.http.get<ApiResponse<Voucher>>(`${this.url}/${id}`); }
+  create(body: { SeriesSno: number; Vou_Date: string; LedSno: number; Amount: number; Narration?: string; Vou_No?: string; }): Observable<ApiResponse<VoucherSaveResult>> { return this.http.post<ApiResponse<VoucherSaveResult>>(this.url, body); }
+  update(id: number, body: { Vou_Date?: string; LedSno?: number; Amount?: number; Narration?: string; CurrentRowVer: string; }): Observable<ApiResponse<VoucherSaveResult>> { return this.http.put<ApiResponse<VoucherSaveResult>>(`${this.url}/${id}`, body); }
+  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> { return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } }); }
+  getLedgerStatement(ledSno: number, fromDate: string, toDate: string): Observable<LedgerStatement> {
+    const params = new HttpParams().set('fromDate', fromDate).set('toDate', toDate);
+    return this.http.get<LedgerStatement>(`${this.url}/ledger-statement/${ledSno}`, { params });
+  }
+}
 
-  get(id: number): Observable<ApiResponse<Voucher>> {
-    return this.http.get<ApiResponse<Voucher>>(`${this.url}/${id}`);
+// ── Reports ───────────────────────────────────────────────────
+export interface ReportLine {
+  GrpSno:   number;
+  Grp_Name: string;
+  LedSno:   number;
+  Led_Name: string;
+  Amount:   number;
+}
+
+export interface ProfitLossReport {
+  success:  boolean;
+  incomes:  ReportLine[];
+  expenses: ReportLine[];
+  summary: {
+    TotalIncome:  number;
+    TotalExpense: number;
+    NetProfit:    number;
+    FromDate:     string;
+    ToDate:       string;
+  };
+}
+
+export interface BalanceSheetReport {
+  success:     boolean;
+  liabilities: ReportLine[];
+  assets:      ReportLine[];
+  summary: {
+    TotalLiabilities:      number;
+    TotalAssets:           number;
+    NetProfit:             number;
+    GrandTotalLiabilities: number;
+    AsOf:                  string;
+  };
+}
+
+export interface LedgerBalanceLine {
+  LedSno:    number;
+  Led_Code:  string;
+  Led_Name:  string;
+  GrpSno:    number;
+  Grp_Code:  string;
+  Grp_Name:  string;
+  Grp_Nature: number;
+  Balance:   number;
+  TotalDebit:  number;
+  TotalCredit: number;
+  TxnCount:  number;
+}
+
+@Injectable({ providedIn: 'root' })
+export class ReportsService {
+  private http = inject(HttpClient);
+  private url  = `${BASE}/reports`;
+
+  ledgerBalance(ledSno = 0, asOf?: string): Observable<ApiResponse<LedgerBalanceLine[]>> {
+    let params = new HttpParams().set('ledSno', ledSno);
+    if (asOf) params = params.set('asOf', asOf);
+    return this.http.get<ApiResponse<LedgerBalanceLine[]>>(`${this.url}/ledger-balance`, { params });
   }
 
-  create(body: {
-    SeriesSno: number; Vou_Date: string; LedSno: number;
-    Amount: number; Narration?: string; Vou_No?: string;
-  }): Observable<ApiResponse<VoucherSaveResult>> {
-    return this.http.post<ApiResponse<VoucherSaveResult>>(this.url, body);
+  profitLoss(fromDate: string, toDate: string): Observable<ProfitLossReport> {
+    const params = new HttpParams().set('fromDate', fromDate).set('toDate', toDate);
+    return this.http.get<ProfitLossReport>(`${this.url}/profit-loss`, { params });
   }
 
-  update(id: number, body: {
-    Vou_Date?: string; LedSno?: number; Amount?: number;
-    Narration?: string; CurrentRowVer: string;
-  }): Observable<ApiResponse<VoucherSaveResult>> {
-    return this.http.put<ApiResponse<VoucherSaveResult>>(`${this.url}/${id}`, body);
-  }
-
-  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> {
-    return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } });
-  }
-
-  getLedgerStatement(
-    ledSno: number, fromDate: string, toDate: string
-  ): Observable<LedgerStatement> {
-    const params = new HttpParams()
-      .set('fromDate', fromDate)
-      .set('toDate',   toDate);
-    return this.http.get<LedgerStatement>(
-      `${this.url}/ledger-statement/${ledSno}`, { params }
-    );
+  balanceSheet(asOf: string): Observable<BalanceSheetReport> {
+    const params = new HttpParams().set('asOf', asOf);
+    return this.http.get<BalanceSheetReport>(`${this.url}/balance-sheet`, { params });
   }
 }
 
@@ -186,26 +174,10 @@ export class VouchersService {
 export class UsersService {
   private http = inject(HttpClient);
   private url  = `${BASE}/auth/users`;
-
-  list(): Observable<ApiResponse<ManagedUser[]>> {
-    return this.http.get<ApiResponse<ManagedUser[]>>(this.url);
-  }
-  get(id: number): Observable<ApiResponse<ManagedUser>> {
-    return this.http.get<ApiResponse<ManagedUser>>(`${this.url}/${id}`);
-  }
-  create(body: { User_Name: string; Password: string; Email?: string; Role?: string }):
-    Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(this.url, body);
-  }
-  update(id: number, body: Partial<ManagedUser> & { CurrentRowVer: string }):
-    Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(`${this.url}/${id}`, body);
-  }
-  resetPassword(id: number, body: { NewPassword: string; CurrentRowVer: string }):
-    Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(`${this.url}/${id}/reset-password`, body);
-  }
-  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> {
-    return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } });
-  }
+  list(): Observable<ApiResponse<ManagedUser[]>> { return this.http.get<ApiResponse<ManagedUser[]>>(this.url); }
+  get(id: number): Observable<ApiResponse<ManagedUser>> { return this.http.get<ApiResponse<ManagedUser>>(`${this.url}/${id}`); }
+  create(body: { User_Name: string; Password: string; Email?: string; Role?: string }): Observable<ApiResponse> { return this.http.post<ApiResponse>(this.url, body); }
+  update(id: number, body: Partial<ManagedUser> & { CurrentRowVer: string }): Observable<ApiResponse> { return this.http.put<ApiResponse>(`${this.url}/${id}`, body); }
+  resetPassword(id: number, body: { NewPassword: string; CurrentRowVer: string }): Observable<ApiResponse> { return this.http.put<ApiResponse>(`${this.url}/${id}/reset-password`, body); }
+  delete(id: number, CurrentRowVer: string): Observable<ApiResponse> { return this.http.delete<ApiResponse>(`${this.url}/${id}`, { body: { CurrentRowVer } }); }
 }

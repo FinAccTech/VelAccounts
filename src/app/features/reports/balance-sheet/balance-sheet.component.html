@@ -1,0 +1,134 @@
+<div class="page-header no-print">
+  <h2 class="page-title">Balance Sheet</h2>
+  <button mat-stroked-button (click)="print()">
+    <mat-icon>print</mat-icon> Print
+  </button>
+</div>
+
+<!-- Date filter -->
+<mat-card class="filter-card no-print">
+  <form [formGroup]="form" class="filter-row">
+    <mat-form-field appearance="outline">
+      <mat-label>As of Date</mat-label>
+      <input matInput [matDatepicker]="dpAsOf" formControlName="asOf" />
+      <mat-datepicker-toggle matSuffix [for]="dpAsOf" />
+      <mat-datepicker #dpAsOf />
+      <mat-error>Required</mat-error>
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="load()" [disabled]="loading()">
+      <mat-icon>search</mat-icon> Generate
+    </button>
+  </form>
+</mat-card>
+
+@if (loading()) { <mat-progress-bar mode="indeterminate" class="no-print" /> }
+
+@if (report()) {
+  <!-- Print header -->
+  <div class="print-header print-only">
+    <h2>Balance Sheet</h2>
+    <p>As of {{ report()!.summary.AsOf | date:'dd MMM yyyy' }}</p>
+  </div>
+
+  <div class="report-grid">
+
+    <!-- ── LIABILITIES SIDE ───────────────────────────────── -->
+    <mat-card class="report-card">
+      <div class="card-title liab-title">
+        <mat-icon>account_balance_wallet</mat-icon> Liabilities
+      </div>
+      <mat-divider />
+
+      @if (liabilityGroups().length === 0) {
+        <p class="empty-msg">No liability accounts.</p>
+      }
+
+      @for (grp of liabilityGroups(); track grp.grpName) {
+        <div class="group-header">{{ grp.grpName }}</div>
+        @for (line of grp.lines; track line.LedSno) {
+          <div class="report-line">
+            <span class="led-name">{{ line.Led_Name }}</span>
+            <span class="amount liab-amount">{{ line.Amount | number:'1.2-2' }}</span>
+          </div>
+        }
+        <div class="group-total">
+          <span>Subtotal — {{ grp.grpName }}</span>
+          <span class="liab-amount">{{ grp.total | number:'1.2-2' }}</span>
+        </div>
+        <mat-divider />
+      }
+
+      <!-- Net Profit added to liabilities -->
+      <div class="net-line" [class.profit]="report()!.summary.NetProfit >= 0"
+                            [class.loss]="report()!.summary.NetProfit < 0">
+        <span>{{ report()!.summary.NetProfit >= 0 ? 'Add: Net Profit' : 'Less: Net Loss' }}</span>
+        <span>{{ report()!.summary.NetProfit | number:'1.2-2' }}</span>
+      </div>
+      <mat-divider />
+
+      <div class="grand-total">
+        <span>Total Liabilities</span>
+        <span class="liab-amount">{{ report()!.summary.GrandTotalLiabilities | number:'1.2-2' }}</span>
+      </div>
+    </mat-card>
+
+    <!-- ── ASSETS SIDE ────────────────────────────────────── -->
+    <mat-card class="report-card">
+      <div class="card-title asset-title">
+        <mat-icon>savings</mat-icon> Assets
+      </div>
+      <mat-divider />
+
+      @if (assetGroups().length === 0) {
+        <p class="empty-msg">No asset accounts.</p>
+      }
+
+      @for (grp of assetGroups(); track grp.grpName) {
+        <div class="group-header">{{ grp.grpName }}</div>
+        @for (line of grp.lines; track line.LedSno) {
+          <div class="report-line">
+            <span class="led-name">{{ line.Led_Name }}</span>
+            <span class="amount asset-amount">{{ line.Amount | number:'1.2-2' }}</span>
+          </div>
+        }
+        <div class="group-total">
+          <span>Subtotal — {{ grp.grpName }}</span>
+          <span class="asset-amount">{{ grp.total | number:'1.2-2' }}</span>
+        </div>
+        <mat-divider />
+      }
+
+      <div class="grand-total">
+        <span>Total Assets</span>
+        <span class="asset-amount">{{ report()!.summary.TotalAssets | number:'1.2-2' }}</span>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Balance check banner -->
+  <mat-card class="summary-banner no-print">
+    <div class="summary-item">
+      <span class="sum-label">Total Liabilities + Net P&L</span>
+      <span class="sum-value liab-amount">{{ report()!.summary.GrandTotalLiabilities | number:'1.2-2' }}</span>
+    </div>
+    <div class="summary-item">
+      <span class="sum-label">Total Assets</span>
+      <span class="sum-value asset-amount">{{ report()!.summary.TotalAssets | number:'1.2-2' }}</span>
+    </div>
+    <div class="summary-item"
+         [class.balanced]="isBalanced()"
+         [class.unbalanced]="!isBalanced()">
+      <span class="sum-label">{{ isBalanced() ? '✓ Balanced' : '⚠ Difference' }}</span>
+      <span class="sum-value">
+        {{ (report()!.summary.GrandTotalLiabilities - report()!.summary.TotalAssets) | number:'1.2-2' }}
+      </span>
+    </div>
+  </mat-card>
+}
+
+@if (!report() && !loading()) {
+  <div class="empty-state">
+    <mat-icon>account_balance</mat-icon>
+    <p>Select a date and click Generate to view the Balance Sheet.</p>
+  </div>
+}
